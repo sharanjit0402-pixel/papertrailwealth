@@ -67,3 +67,9 @@ A simple order many people follow:
 The 50/30/20 rule works because it gives you **permission**. 30% for wants means you can enjoy your money without guilt, as long as the other two buckets are taken care of. A budget you can live with beats a perfect budget you quit.
 
 **The one-line lesson:** You don't need a complicated budget. You need three buckets and the habit of checking them once a month.
+
+## Save this for later
+
+Pin this to your Pinterest budgeting board so it's there on your next payday.
+
+![The 50/30/20 budget rule: 50% needs, 30% wants, 20% savings on a $4,000 paycheck](/pins/50-30-20-1.png)
