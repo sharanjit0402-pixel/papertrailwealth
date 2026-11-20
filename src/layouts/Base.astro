@@ -1,0 +1,60 @@
+---
+import { SITE, CATEGORIES, slugify } from '../site';
+import '../styles/global.css';
+interface Props { title?: string; description?: string; image?: string; }
+const { title, description = SITE.tagline, image } = Astro.props;
+const fullTitle = title ? `${title} | ${SITE.name}` : `${SITE.name} | Plain-English Money Guides`;
+const canonical = new URL(Astro.url.pathname, SITE.url).href;
+const year = new Date().getFullYear();
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={description} />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content={canonical} />
+  {image && <meta property="og:image" content={new URL(image, SITE.url).href} />}
+  {image && <meta name="twitter:card" content="summary_large_image" />}
+  <meta name="theme-color" content="#1F7A4D" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <slot name="head" />
+</head>
+<body>
+  <header class="nav container">
+    <a href="/" class="word">The Paper <span>Trail</span></a>
+    <nav class="links">
+      {CATEGORIES.map((c) => <a href={`/category/${slugify(c)}/`}>{c === 'Money History' ? 'History' : c}</a>)}
+    </nav>
+    <a class="btn btn-dark navbtn" href="/tools/budget-calculator/"><span class="full">Budget </span>Calculator</a>
+  </header>
+  <main><slot /></main>
+  <footer class="footer">
+    <div class="container foot-grid">
+      <div>
+        <a href="/" class="word">The Paper <span>Trail</span></a>
+        <p class="muted">{SITE.tagline} General education only. Not financial advice.</p>
+      </div>
+      <div>
+        <h5>Topics</h5>
+        {CATEGORIES.map((c) => <a href={`/category/${slugify(c)}/`}>{c}</a>)}
+      </div>
+      <div>
+        <h5>Site</h5>
+        <a href="/about/">About</a><a href="/contact/">Contact</a>
+        <a href="/privacy-policy/">Privacy Policy</a><a href="/disclaimer/">Disclaimer</a>
+      </div>
+    </div>
+    <div class="container copy">© {year} The Paper Trail · papertrailwealth.com</div>
+  </footer>
+</body>
+</html>
