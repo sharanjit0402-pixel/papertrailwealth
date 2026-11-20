@@ -1,0 +1,21 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES, slugify } from '../../site';
+export function getStaticPaths() {
+  return CATEGORIES.map((c) => ({ params: { cat: slugify(c) }, props: { name: c } }));
+}
+const { name } = Astro.props;
+const posts = (await getCollection('posts')).filter((p) => p.data.category === name).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base title={`${name} Guides`} description={`Plain-English ${name.toLowerCase()} guides from The Paper Trail.`}>
+  <section class="container">
+    <h1 class="section-title" style="font-size:46px">{name}</h1>
+    <div class="chips">
+      <a class="chip" href="/">All</a>
+      {CATEGORIES.map((c) => <a class={`chip ${c === name ? 'on' : ''}`} href={`/category/${slugify(c)}/`}>{c}</a>)}
+    </div>
+    {posts.length ? <div class="grid">{posts.map((p) => <PostCard post={p} />)}</div> : <p class="muted" style="padding:40px 0 120px;font-size:18px">New {name.toLowerCase()} guides are on the way. <a href="/" style="color:#1F7A4D;font-weight:600">Browse all guides →</a></p>}
+  </section>
+</Base>
