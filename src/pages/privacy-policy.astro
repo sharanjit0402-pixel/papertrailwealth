@@ -1,0 +1,31 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site';
+---
+<Base title="Privacy Policy" description="Privacy policy for The Paper Trail (papertrailwealth.com).">
+  <section class="page prose">
+    <h1>Privacy Policy</h1>
+    <p class="muted">Last updated: November 20, 2026</p>
+    <p>This policy explains what information papertrailwealth.com ("The Paper Trail", "we") collects and how it is used.</p>
+    <h2>Information we collect</h2>
+    <ul>
+      <li><strong>Information you send us.</strong> If you email us or sign up for our newsletter, we receive your email address and anything you choose to include.</li>
+      <li><strong>Usage data.</strong> Like most websites, we and our service providers automatically collect standard data such as your browser type, device, approximate location (country/region), pages visited and referring site.</li>
+      <li><strong>Calculators.</strong> Numbers you type into our tools are processed in your browser. They are not sent to us or stored by us.</li>
+    </ul>
+    <h2>Cookies and analytics</h2>
+    <p>We may use cookies and similar technologies, including analytics services such as Google Analytics, to understand how visitors use the site so we can improve it. You can block or delete cookies in your browser settings.</p>
+    <h2>Advertising</h2>
+    <p>We may work with third-party advertising partners. These partners may use cookies, web beacons and similar technologies to collect information about your visits to this and other websites in order to show you relevant ads. Where required by law, we will ask for your consent before such cookies are used. You can learn more about opting out of personalized advertising at <a href="https://optout.aboutads.info/" rel="nofollow noopener">aboutads.info</a> and <a href="https://www.networkadvertising.org/choices/" rel="nofollow noopener">networkadvertising.org</a>.</p>
+    <h2>Affiliate links</h2>
+    <p>Some links may be affiliate links. When you click them, the partner may set cookies to track the referral.</p>
+    <h2>Your rights</h2>
+    <p>Depending on where you live (for example California under the CCPA/CPRA, or the EU/UK under the GDPR), you may have the right to access, correct or delete your personal information, or to opt out of its sale or sharing. To make a request, email us at <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+    <h2>Children</h2>
+    <p>This site is intended for adults and is not directed at children under 13. We do not knowingly collect information from children.</p>
+    <h2>Changes</h2>
+    <p>We may update this policy from time to time. The "last updated" date above shows when it last changed.</p>
+    <h2>Contact</h2>
+    <p>Questions about this policy? Email <a href={`mailto:${SITE.email}`}>{SITE.email}</a>.</p>
+  </section>
+</Base>

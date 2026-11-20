@@ -1,0 +1,13 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../site';
+---
+<Base title="Contact" description="Get in touch with The Paper Trail.">
+  <section class="page prose">
+    <h1>Contact</h1>
+    <p>Questions, corrections or ideas for a guide? We read every message.</p>
+    <p style="font-size:24px;font-weight:700"><a href={`mailto:${SITE.email}`}>{SITE.email}</a></p>
+    <p class="muted">We can't give personal financial advice, but we're happy to point you to a guide or consider your question for a future article.</p>
+    <p>For brand partnerships, please include "Partnership" in the subject line.</p>
+  </section>
+</Base>

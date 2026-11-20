@@ -1,0 +1,41 @@
+---
+import Base from '../layouts/Base.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES, slugify } from '../site';
+const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+---
+<Base>
+  <div class="hero-wrap">
+    <section class="hero container">
+      <div>
+        <span class="pill">Free, plain-English money guides</span>
+        <h1>Money advice that's <span>actually simple.</span></h1>
+        <p class="sub">Budgeting, saving and bill-cutting guides for real families, written in plain English. No jargon. No sales pitch.</p>
+        <div class="cta">
+          <a class="btn btn-green" href="/tools/budget-calculator/">Try the free budget calculator</a>
+          <a class="btn btn-ghost" href="#guides">Read the guides</a>
+        </div>
+      </div>
+      <div class="panel" aria-hidden="true">
+        <div class="big">
+          <small>52-week savings challenge</small>
+          <b class="num">$1,378</b>
+          <div class="bars"><i style="height:20%"></i><i style="height:32%"></i><i style="height:45%"></i><i style="height:58%"></i><i style="height:72%"></i><i class="on" style="height:100%"></i></div>
+        </div>
+        <div class="float"><small>Saved by week 52</small><b>Starting at $1</b><em>↑ one dollar more each week</em></div>
+      </div>
+    </section>
+  </div>
+  <section class="container" id="guides">
+    <div class="chips">
+      <a class="chip on" href="/">All</a>
+      {CATEGORIES.map((c) => <a class="chip" href={`/category/${slugify(c)}/`}>{c}</a>)}
+    </div>
+    <div class="grid">{posts.map((p) => <PostCard post={p} />)}</div>
+    <div class="promo">
+      <div><h2>Where does your paycheck actually go?</h2><p>Enter your take-home pay and bills. See your 50/30/20 split in seconds. Free, and nothing is saved or sent anywhere.</p></div>
+      <a class="btn" href="/tools/budget-calculator/">Open the calculator →</a>
+    </div>
+  </section>
+</Base>
