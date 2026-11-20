@@ -1,0 +1,50 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="Free 50/30/20 Budget Calculator" description="Enter your monthly take-home pay and see how much goes to needs, wants and savings with the 50/30/20 rule. Free, private, no sign-up.">
+  <section class="page" style="max-width:1100px">
+    <span class="pill">Free tool · Nothing is saved or sent</span>
+    <h1 style="margin-top:18px">50/30/20 Budget Calculator</h1>
+    <p class="muted" style="font-size:19px;margin-top:12px;max-width:680px">Type your monthly take-home pay (after taxes) and what you actually spend. We'll show your target split and how your real spending compares.</p>
+    <div class="calc">
+      <div class="box">
+        <h3>Your numbers (per month)</h3>
+        <label>Take-home pay<input id="inc" type="number" inputmode="decimal" placeholder="e.g. 4000" /></label>
+        <label>Needs: rent, groceries, utilities, insurance, minimum debt payments<input id="needs" type="number" inputmode="decimal" placeholder="e.g. 2200" /></label>
+        <label>Wants: dining out, streaming, shopping, hobbies<input id="wants" type="number" inputmode="decimal" placeholder="e.g. 900" /></label>
+        <label>Savings &amp; extra debt payments<input id="save" type="number" inputmode="decimal" placeholder="e.g. 500" /></label>
+      </div>
+      <div class="box" id="out">
+        <h3>Your 50/30/20 targets</h3>
+        <div id="rows"><p class="muted" style="margin-top:16px">Enter your take-home pay to see your targets.</p></div>
+        <p id="left" style="margin-top:18px;font-weight:600"></p>
+      </div>
+    </div>
+    <div class="prose" style="max-width:760px;margin-top:50px">
+      <h2>How the 50/30/20 rule works</h2>
+      <p>The rule splits your take-home pay into three buckets: about <strong>50% for needs</strong>, <strong>30% for wants</strong>, and <strong>20% for savings and paying down debt</strong>. It isn't a law. It's a starting point that makes a budget simple enough to actually stick to.</p>
+      <p>If your needs are well over 50% (common in high-rent cities), don't panic. Use the numbers to see where you are, then adjust slowly. Read the full guide: <a href="/blog/50-30-20-budget-rule/">The 50/30/20 Budget Rule, Explained Simply</a>.</p>
+    </div>
+  </section>
+  <script is:inline>
+    const $ = (id) => document.getElementById(id);
+    const fmt = (n) => '$' + Math.round(n).toLocaleString('en-US');
+    const row = (label, target, actual, color) => {
+      const pct = actual != null && target > 0 ? Math.min(100, (actual / target) * 100) : 0;
+      const status = actual == null ? '' : actual <= target ? '<span style="color:#1F7A4D">✓ within target</span>' : '<span style="color:#B45309">' + fmt(actual - target) + ' over</span>';
+      return `<div class="res-row"><div><div style="font-weight:600">${label}</div><div class="muted" style="font-size:14px">${actual != null ? 'You: ' + fmt(actual) + ' · ' + status : ''}</div></div><b>${fmt(target)}</b></div>` + (actual != null ? `<div class="barline"><i style="width:${pct}%;background:${actual > target && label.startsWith('Needs') || actual > target && label.startsWith('Wants') ? '#B45309' : color}"></i></div>` : '');
+    };
+    function calc() {
+      const inc = parseFloat($('inc').value);
+      const v = (id) => ($(id).value === '' ? null : parseFloat($(id).value));
+      if (!inc || inc <= 0) { $('rows').innerHTML = '<p class="muted" style="margin-top:16px">Enter your take-home pay to see your targets.</p>'; $('left').textContent=''; return; }
+      const n = v('needs'), w = v('wants'), s = v('save');
+      $('rows').innerHTML = row('Needs (50%)', inc * 0.5, n, '#1F7A4D') + row('Wants (30%)', inc * 0.3, w, '#4338CA') + row('Savings & debt (20%)', inc * 0.2, s, '#B45309');
+      if (n != null && w != null && s != null) {
+        const left = inc - n - w - s;
+        $('left').innerHTML = left >= 0 ? `Unassigned money: <span style="color:#1F7A4D">${fmt(left)}</span>. Give every dollar a job.` : `You're spending <span style="color:#B45309">${fmt(-left)} more</span> than you take home.`;
+      } else $('left').textContent = '';
+    }
+    ['inc','needs','wants','save'].forEach((id) => $(id).addEventListener('input', calc));
+  </script>
+</Base>
