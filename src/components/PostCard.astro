@@ -1,0 +1,13 @@
+---
+import { TONES } from '../site';
+const { post } = Astro.props;
+const [bg, fg] = TONES[post.data.category] ?? ['#E7F3EC', '#1F7A4D'];
+---
+<a class="card" href={`/blog/${post.id}/`}>
+  <div class="th" style={`background:${bg};color:${fg}`}>{post.data.icon}</div>
+  <div class="b">
+    <div class="tag">{post.data.category}</div>
+    <h3>{post.data.title}</h3>
+    <p>{post.data.description}</p>
+  </div>
+</a>
