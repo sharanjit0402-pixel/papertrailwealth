@@ -4,7 +4,7 @@ description: "Anthropic's stock rose 17% on its first day, yet people who bought
 category: Investing
 date: 2026-11-20
 icon: "IPO"
-image: "/images/anthropic-ipo-day-one.jpg"
+image: "/images/anthropic-ipo-day-one.svg"
 imageAlt: "Chart of Anthropic's first trading day: $83 IPO price, $111.50 first trade, $97.17 close"
 ---
 
