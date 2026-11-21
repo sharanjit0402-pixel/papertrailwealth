@@ -3,6 +3,8 @@ title: "The 50/30/20 Budget Rule, Explained Simply"
 description: "A simple way to split every paycheck into needs, wants and savings, without a spreadsheet."
 category: Budgeting
 date: 2026-11-20
+image: "/images/50-30-20-budget-rule.svg"
+imageAlt: "A $4,000 paycheck split into needs $2,000, wants $1,200 and savings $800"
 icon: "50/30/20"
 featured: true
 ---

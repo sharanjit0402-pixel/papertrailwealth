@@ -3,6 +3,8 @@ title: "The 52-Week Money Challenge: Save $1,378 in a Year"
 description: "Start with just $1 and add one dollar each week. Here's how it works, plus easier versions if money is tight."
 category: Saving
 date: 2026-11-19
+image: "/images/52-week-money-challenge.svg"
+imageAlt: "52 bars growing from $1 in week 1 to $52 in week 52, filling a jar to $1,378"
 icon: "$1,378"
 ---
 

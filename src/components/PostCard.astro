@@ -4,7 +4,9 @@ const { post } = Astro.props;
 const [bg, fg] = TONES[post.data.category] ?? ['#E7F3EC', '#1F7A4D'];
 ---
 <a class="card" href={`/blog/${post.id}/`}>
-  <div class="th" style={`background:${bg};color:${fg}`}>{post.data.icon}</div>
+  {post.data.image
+    ? <img class="th th-img" src={post.data.image} alt={post.data.imageAlt ?? post.data.title} width="1600" height="900" loading="lazy" />
+    : <div class="th" style={`background:${bg};color:${fg}`}>{post.data.icon}</div>}
   <div class="b">
     <div class="tag">{post.data.category}</div>
     <h3>{post.data.title}</h3>

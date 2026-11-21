@@ -3,6 +3,8 @@ title: "How to Build an Emergency Fund From $0"
 description: "A step-by-step plan to build a money cushion, even on a tight paycheck."
 category: Saving
 date: 2026-11-18
+image: "/images/emergency-fund-from-zero.svg"
+imageAlt: "A $400 car repair bill next to an emergency fund progress bar from $0 to $1,000"
 icon: "$0 → $1K"
 ---
 

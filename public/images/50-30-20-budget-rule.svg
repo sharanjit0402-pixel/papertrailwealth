@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#EEF7F1"/><stop offset="1" stop-color="#D9EFE2"/></linearGradient></defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <text x="80" y="110" fill="#1F7A4D" font-size="26" font-weight="700" letter-spacing="5">ONE PAYCHECK · THREE BUCKETS</text>
+  <text x="80" y="210" fill="#14171A" font-size="84" font-weight="800" letter-spacing="-2.5">Where your $4,000 goes</text>
+  <g transform="translate(80,290)">
+    <rect width="1440" height="96" rx="24" fill="#ffffff" stroke="#14171A" stroke-opacity="0.12" stroke-width="2"/>
+    <text x="36" y="62" fill="#14171A" font-size="38" font-weight="800">PAYCHECK</text>
+    <text x="1404" y="64" fill="#1F7A4D" font-size="48" font-weight="800" text-anchor="end">$4,000</text>
+  </g>
+  <path d="M440 400 L440 450 M800 400 L800 450 M1160 400 L1160 450" stroke="#1F7A4D" stroke-width="6" stroke-linecap="round"/>
+  <g transform="translate(80,470)">
+    <rect width="720" height="340" rx="28" fill="#1F7A4D"/>
+    <text x="40" y="96" fill="#ffffff" font-size="90" font-weight="800" letter-spacing="-2">50%</text>
+    <text x="40" y="160" fill="#ffffff" fill-opacity="0.85" font-size="40" font-weight="700">NEEDS</text>
+    <text x="40" y="290" fill="#ffffff" font-size="76" font-weight="800" letter-spacing="-2">$2,000</text>
+  </g>
+  <g transform="translate(830,470)">
+    <rect width="420" height="340" rx="28" fill="#0B3D26"/>
+    <text x="36" y="96" fill="#ffffff" font-size="90" font-weight="800" letter-spacing="-2">30%</text>
+    <text x="36" y="160" fill="#ffffff" fill-opacity="0.85" font-size="40" font-weight="700">WANTS</text>
+    <text x="36" y="290" fill="#ffffff" font-size="64" font-weight="800" letter-spacing="-2">$1,200</text>
+  </g>
+  <g transform="translate(1280,470)">
+    <rect width="240" height="340" rx="28" fill="#ffffff" stroke="#1F7A4D" stroke-width="5"/>
+    <text x="28" y="96" fill="#1F7A4D" font-size="80" font-weight="800" letter-spacing="-2">20%</text>
+    <text x="28" y="160" fill="#1F7A4D" font-size="34" font-weight="700">SAVE</text>
+    <text x="28" y="290" fill="#14171A" font-size="56" font-weight="800" letter-spacing="-2">$800</text>
+  </g>
+</svg>

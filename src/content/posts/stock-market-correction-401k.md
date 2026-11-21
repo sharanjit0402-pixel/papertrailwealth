@@ -3,6 +3,8 @@ title: "What a Stock Market Correction Means for Your 401(k)"
 description: "U.S. stocks just lost $6 trillion in 45 days. Here's what a correction is, where that money actually went, and what history says happens next."
 category: Investing
 date: 2026-11-21
+image: "/images/stock-market-correction.svg"
+imageAlt: "S&P 500 chart falling from its record high through the 10% correction line: down $6 trillion in 45 days"
 icon: "-10%"
 featured: false
 ---

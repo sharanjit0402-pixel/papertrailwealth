@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#14233A"/><stop offset="1" stop-color="#0E1A2B"/></linearGradient>
+    <linearGradient id="fill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#EF4444" stop-opacity="0.35"/><stop offset="1" stop-color="#EF4444" stop-opacity="0"/></linearGradient>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse"><path d="M80 0H0V80" fill="none" stroke="#ffffff" stroke-opacity="0.05" stroke-width="2"/></pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <text x="80" y="110" fill="#ffffff" fill-opacity="0.75" font-size="26" font-weight="700" letter-spacing="5">S&amp;P 500 · OCT 6 → NOV 20, 2026</text>
+  <text x="80" y="230" fill="#FCA5A5" font-size="124" font-weight="800" letter-spacing="-4">−$6 trillion</text>
+  <text x="80" y="310" fill="#ffffff" font-size="62" font-weight="800" letter-spacing="-1.5">gone in 45 days.</text>
+  <path d="M80 560 L200 530 L300 545 L420 490 L520 505 L620 460 L700 430 L790 455 L870 520 L940 500 L1020 590 L1100 570 L1180 650 L1260 630 L1350 720 L1430 700 L1520 790 L1520 900 L80 900Z" fill="url(#fill)"/>
+  <line x1="80" y1="610" x2="1520" y2="610" stroke="#ffffff" stroke-opacity="0.45" stroke-width="3" stroke-dasharray="14 12"/>
+  <text x="1520" y="596" fill="#ffffff" fill-opacity="0.8" font-size="26" font-weight="700" text-anchor="end">−10% = CORRECTION LINE</text>
+  <path d="M80 560 L200 530 L300 545 L420 490 L520 505 L620 460 L700 430 L790 455 L870 520 L940 500 L1020 590 L1100 570 L1180 650 L1260 630 L1350 720 L1430 700 L1520 790" fill="none" stroke="#EF4444" stroke-width="9" stroke-linejoin="round" stroke-linecap="round"/>
+  <circle cx="700" cy="430" r="16" fill="#ffffff" stroke="#14233A" stroke-width="6"/>
+  <text x="700" y="390" fill="#ffffff" font-size="30" font-weight="800" text-anchor="middle">Record high</text>
+  <circle cx="1520" cy="790" r="16" fill="#EF4444" stroke="#ffffff" stroke-width="5"/>
+  <g transform="translate(1040,90)">
+    <rect width="480" height="200" rx="26" fill="#ffffff" fill-opacity="0.1" stroke="#ffffff" stroke-opacity="0.25" stroke-width="2"/>
+    <text x="34" y="62" fill="#ffffff" fill-opacity="0.8" font-size="24" font-weight="700" letter-spacing="2">YOUR 401(K)</text>
+    <text x="34" y="138" fill="#ffffff" font-size="58" font-weight="800" letter-spacing="-1.5">Lost? <tspan fill="#FCA5A5">Not yet.</tspan></text>
+    <text x="34" y="176" fill="#ffffff" fill-opacity="0.7" font-size="22" font-weight="600">A paper loss isn't a real loss</text>
+  </g>
+</svg>
