@@ -34,7 +34,7 @@ const year = new Date().getFullYear();
   <header class="nav container">
     <a href="/" class="word">The Paper <span>Trail</span></a>
     <nav class="links">
-      {CATEGORIES.map((c) => <a href={`/category/${slugify(c)}/`}>{c === 'Money History' ? 'History' : c}</a>)}
+      {CATEGORIES.map((c) => { const href = `/category/${slugify(c)}/`; return <a href={href} class={Astro.url.pathname === href ? 'on' : undefined}>{c === 'Money History' ? 'History' : c}</a>; })}
     </nav>
     <a class="btn btn-dark navbtn" href="/tools/budget-calculator/"><span class="full">Budget </span>Calculator</a>
   </header>

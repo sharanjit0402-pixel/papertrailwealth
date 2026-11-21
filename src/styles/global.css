@@ -106,7 +106,11 @@ img{max-width:100%;display:block}
 
 .navbtn{white-space:nowrap}
 @media (max-width:900px){
-  .links{display:none}
+  .nav{flex-wrap:wrap;row-gap:14px;padding-bottom:14px}
+  .links{order:3;flex:0 0 calc(100% + 48px);margin:0 -24px;padding:2px 24px 4px;gap:8px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;font-size:15px}
+  .links::-webkit-scrollbar{display:none}
+  .links a{flex:none;padding:9px 16px;border-radius:999px;background:#F3F4F6;color:#374151;font-weight:600}
+  .links a.on{background:#E7F3EC;color:var(--g)}
   .navbtn{padding:10px 14px;font-size:14px}.navbtn .full{display:none}
   .hero{grid-template-columns:1fr;gap:40px}
   .panel{height:360px}
