@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" width="1600" height="900" font-family="Inter, 'Helvetica Neue', Helvetica, Arial, sans-serif">
+  <defs>
+    <radialGradient id="bg" cx="0" cy="0" r="1.6" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#0B3D26"/><stop offset="0.45" stop-color="#145C3A"/><stop offset="0.78" stop-color="#1F7A4D"/><stop offset="1" stop-color="#34A871"/>
+    </radialGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse"><circle cx="1" cy="1" r="1" fill="#ffffff" fill-opacity="0.08"/></pattern>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <rect width="1600" height="900" fill="url(#dots)"/>
+  <text x="80" y="110" fill="#ffffff" fill-opacity="0.8" font-size="24" font-weight="700" letter-spacing="4">FDIC DEPOSIT INSURANCE · EXPLAINED</text>
+  <text x="80" y="190" fill="#ffffff" font-size="56" font-weight="800" letter-spacing="-1.5">If your bank failed tomorrow,</text>
+  <text x="80" y="258" fill="#ffffff" font-size="56" font-weight="800" letter-spacing="-1.5">how much would you get back?</text>
+  <text x="76" y="500" fill="#A7F3C9" font-size="210" font-weight="900" letter-spacing="-6">$250,000</text>
+  <g font-size="30" font-weight="800" letter-spacing="2">
+    <rect x="80" y="570" width="270" height="70" rx="35" fill="#ffffff"/><text x="215" y="616" text-anchor="middle" fill="#0B3D26">PER PERSON</text>
+    <rect x="370" y="570" width="240" height="70" rx="35" fill="#ffffff"/><text x="490" y="616" text-anchor="middle" fill="#0B3D26">PER BANK</text>
+    <rect x="630" y="570" width="420" height="70" rx="35" fill="#ffffff"/><text x="840" y="616" text-anchor="middle" fill="#0B3D26">PER ACCOUNT TYPE</text>
+  </g>
+  <text x="80" y="730" fill="#ffffff" fill-opacity="0.85" font-size="32" font-weight="600">A married couple can be covered for $1.5 million at one bank.</text>
+  <g transform="translate(1180,300)" fill="none" stroke="#ffffff" stroke-width="14" stroke-linejoin="round" stroke-opacity="0.9">
+    <path d="M160 0 L320 80 L0 80 Z" fill="#ffffff" fill-opacity="0.12"/>
+    <rect x="20" y="100" width="280" height="200"/>
+    <line x1="80" y1="120" x2="80" y2="280"/><line x1="160" y1="120" x2="160" y2="280"/><line x1="240" y1="120" x2="240" y2="280"/>
+    <rect x="0" y="300" width="320" height="30" fill="#ffffff" fill-opacity="0.12"/>
+  </g>
+  <g transform="translate(1390,560)">
+    <path d="M60 0 L120 22 L120 72 Q120 120 60 146 Q0 120 0 72 L0 22 Z" fill="#A7F3C9" stroke="#0B3D26" stroke-width="8"/>
+    <path d="M32 72 L54 94 L92 50" fill="none" stroke="#0B3D26" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="80" y="840" fill="#ffffff" fill-opacity="0.7" font-size="24" font-weight="700" letter-spacing="3">PAPERTRAILWEALTH.COM</text>
+</svg>
