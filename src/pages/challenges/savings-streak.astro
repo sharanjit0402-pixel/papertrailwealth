@@ -83,12 +83,13 @@ import AuthBox from '../../components/challenges/AuthBox.astro';
       $('cal').innerHTML = cells.join('');
     }
 
-    $('go').addEventListener('click', async () => { await enroll(C, { daily: Number(($('daily') as any).value) }); toast('Streak started. Log your first day!'); render(); });
+    $('go').addEventListener('click', async () => { await (window as any).ptwAskEmail?.('start'); await enroll(C, { daily: Number(($('daily') as any).value) }); toast('Streak started. Log your first day!'); render(); });
     $('log').addEventListener('click', async () => {
       const amount = parseFloat($('amt').value);
       if (!(amount > 0)) { toast('Enter how much you saved today.'); return; }
       await addLog(C, { ref: todayKey(), kind: 'day', amount });
       const s = await load(C); const { current } = streakInfo(s.logs.map((l) => l.ref));
+      if (s.logs.length === 1) setTimeout(() => (window as any).ptwAskEmail?.('first'), 1200);
       toast(MILES.includes(current) ? `🏅 ${current}-day streak! You're on fire.` : `🔥 ${current}-day streak. See you tomorrow!`);
       render();
     });

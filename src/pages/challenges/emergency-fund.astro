@@ -97,6 +97,7 @@ import AuthBox from '../../components/challenges/AuthBox.astro';
     $('go').addEventListener('click', async () => {
       const monthly = parseFloat($('monthly').value), weekly = parseFloat($('weekly').value), already = parseFloat($('already').value);
       if (!(monthly > 0) || !(weekly > 0)) { toast('Enter your monthly costs and weekly savings.'); return; }
+      await (window as any).ptwAskEmail?.('start');
       const s = await load(C);
       await enroll(C, { monthly, weekly });
       if (!s.enrollment && already > 0) await addLog(C, { ref: 'start', kind: 'save', amount: already });
@@ -109,6 +110,7 @@ import AuthBox from '../../components/challenges/AuthBox.astro';
       await addLog(C, { ref: uid(), kind, amount });
       const after = before + (kind === 'save' ? amount : -amount);
       const hit = [100, 500, 1000].find((m) => before < m && after >= m);
+      if (before === 0 && kind === 'save') setTimeout(() => (window as any).ptwAskEmail?.('first'), 1200);
       toast(kind === 'withdraw' ? 'Logged. Your fund did its job. Keep building.' : hit ? `🏅 You hit ${money(hit)}!` : `+${money(amount)} added. Nice.`);
       render();
     };

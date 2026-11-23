@@ -19,6 +19,21 @@
   </div>
 </div>
 <div class="toast" id="toast"></div>
+<div class="gate hidden" id="gate" role="dialog" aria-modal="true" aria-labelledby="gate-title">
+  <div class="gate-card">
+    <div style="font-size:40px;line-height:1" id="gate-emoji">🔥</div>
+    <h3 id="gate-title">Don't lose your progress</h3>
+    <p id="gate-sub">Add your email and we'll save your challenge to your account and remind you before your streak breaks. No password, no spam.</p>
+    <form id="gate-form">
+      <input type="text" id="gate-name" placeholder="First name" autocomplete="given-name" required />
+      <input type="email" id="gate-email" placeholder="you@email.com" autocomplete="email" required />
+      <label class="chk"><input type="checkbox" id="gate-optin" checked /> Send me reminders and progress emails. Unsubscribe anytime.</label>
+      <button class="btn btn-green btn-big" type="submit" style="width:100%">Save my progress</button>
+    </form>
+    <p id="gate-msg" style="margin-top:10px;font-weight:600"></p>
+    <button type="button" id="gate-skip" class="gate-skip">Continue without saving</button>
+  </div>
+</div>
 <script>
   import { backendReady, ready, onUser, signIn, signOut } from '../../scripts/challenges-store';
   const $ = (id: string) => document.getElementById(id)!;
@@ -43,5 +58,36 @@
     });
     $('auth-signout').addEventListener('click', async (e) => { e.preventDefault(); await signOut(); location.reload(); });
   }
+  // Email step: pages call window.ptwAskEmail(reason) before starting a
+  // challenge and after the first check-in. Resolves when the visitor
+  // submits or skips; never blocks someone who is signed in.
+  let gateResolve: (() => void) | null = null;
+  const closeGate = () => { $('gate').classList.add('hidden'); gateResolve?.(); gateResolve = null; };
+  (window as any).ptwAskEmail = async (reason: 'start' | 'first') => {
+    if (!backendReady) return;
+    const u = await ready(); if (u) return;
+    const skips = Number(localStorage.getItem('ptw:email-skips') || 0);
+    if (reason === 'first' && skips >= 2) return;
+    if (reason === 'start' && skips >= 3) return;
+    if (sessionStorage.getItem('ptw:email-sent')) return;
+    if (reason === 'first') {
+      $('gate-emoji').textContent = '🎉'; $('gate-title').textContent = 'Day 1 done! Want a reminder tomorrow?';
+      $('gate-sub').textContent = "Your progress is only saved on this device right now. Add your email to keep it safe and we'll nudge you before your streak runs out.";
+    }
+    $('gate').classList.remove('hidden');
+    ($('gate-name') as HTMLInputElement).focus();
+    return new Promise<void>((res) => { gateResolve = res; });
+  };
+  $('gate-skip').addEventListener('click', () => { localStorage.setItem('ptw:email-skips', String(Number(localStorage.getItem('ptw:email-skips') || 0) + 1)); closeGate(); });
+  $('gate-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const msg = $('gate-msg'); msg.textContent = 'Sending…';
+    try {
+      await signIn(($('gate-email') as HTMLInputElement).value.trim(), ($('gate-name') as HTMLInputElement).value.trim(), ($('gate-optin') as HTMLInputElement).checked);
+      sessionStorage.setItem('ptw:email-sent', '1');
+      msg.textContent = '📬 Check your inbox and tap the link from hello@papertrailwealth.com to finish saving.';
+      setTimeout(closeGate, 2500);
+    } catch (err: any) { msg.textContent = 'Something went wrong: ' + (err?.message ?? 'please try again.'); }
+  });
   ready();
 </script>

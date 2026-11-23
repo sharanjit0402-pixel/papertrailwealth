@@ -48,13 +48,14 @@ async function send(to: string, subject: string, html: string, unsub: string) {
 // ---- end helpers ----
 
 
-const page = (msg: string) => new Response(`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><body style="font-family:Inter,Arial,sans-serif;max-width:520px;margin:80px auto;padding:0 20px;color:#14171A"><h2>The Paper <span style="color:#1F7A4D">Trail</span></h2><p style="font-size:18px">${msg}</p><p><a href="${SITE}/challenges/" style="color:#1F7A4D;font-weight:700">Back to my challenges</a></p></body>`, { headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+// Supabase serves function HTML as plain text, so send people to a page on the site.
+const page = (status: 'ok' | 'invalid') => Response.redirect(`${SITE}/challenges/unsubscribed/?status=${status}`, 302);
 
 Deno.serve(async (req) => {
   const url = new URL(req.url);
   const u = url.searchParams.get('u') ?? '', t = url.searchParams.get('t') ?? '';
-  if (!u || t !== await unsubToken(u)) return page('This unsubscribe link is invalid or expired.');
+  if (!u || t !== await unsubToken(u)) return page('invalid');
   const admin = createClient(Deno.env.get('SUPABASE_URL')!, SERVICE_KEY);
   await admin.from('profiles').update({ email_opt_in: false }).eq('id', u);
-  return page("You're unsubscribed from challenge emails. Your progress is still saved, and you can keep using your challenges anytime.");
+  return page('ok');
 });

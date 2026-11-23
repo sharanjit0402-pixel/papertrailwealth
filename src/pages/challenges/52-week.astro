@@ -69,11 +69,12 @@ import AuthBox from '../../components/challenges/AuthBox.astro';
       else {
         await addLog(C, { ref: 'w' + w, kind: 'week', amount: amt(w) });
         const s = await load(C); const n = s.logs.length;
-        toast(n === 52 ? '🎉 All 52 weeks done. $1,378 saved!' : [4, 13, 26, 39].includes(n) ? `🏅 ${n} weeks done! Keep going.` : `✓ Week ${w} saved: $${amt(w)}`);
+        if (s.logs.length === 1) setTimeout(() => (window as any).ptwAskEmail?.('first'), 1200);
+      toast(n === 52 ? '🎉 All 52 weeks done. $1,378 saved!' : [4, 13, 26, 39].includes(n) ? `🏅 ${n} weeks done! Keep going.` : `✓ Week ${w} saved: $${amt(w)}`);
       }
       render();
     });
-    $('go').addEventListener('click', async () => { await enroll(C, { mode: ($('mode') as HTMLSelectElement).value }); toast('Challenge started. Tick off week 1!'); render(); });
+    $('go').addEventListener('click', async () => { await (window as any).ptwAskEmail?.('start'); await enroll(C, { mode: ($('mode') as HTMLSelectElement).value }); toast('Challenge started. Tick off week 1!'); render(); });
     $('reset').addEventListener('click', async (e) => { e.preventDefault(); if (confirm('Reset your 52-Week Challenge? This deletes your ticked weeks.')) { await resetChallenge(C); render(); } });
     ready().then(render); onUser(() => ready().then(render));
   </script>

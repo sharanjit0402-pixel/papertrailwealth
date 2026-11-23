@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+---
+<Base title="Email preferences updated" description="Your Paper Trail challenge email preferences.">
+  <section class="page" style="text-align:center">
+    <div style="font-size:48px">✉️</div>
+    <h1 style="margin-top:10px" id="t">You're unsubscribed</h1>
+    <p class="muted" style="font-size:19px;margin-top:12px" id="m">You won't get any more challenge emails. Your progress is still saved, and you can keep using your challenges anytime.</p>
+    <p style="margin-top:28px"><a class="btn btn-green" href="/challenges/">Back to my challenges</a></p>
+  </section>
+  <script is:inline>
+    if (new URLSearchParams(location.search).get('status') === 'invalid') {
+      document.getElementById('t').textContent = 'That link didn’t work';
+      document.getElementById('m').textContent = 'This unsubscribe link is invalid or expired. Email hello@papertrailwealth.com and we’ll remove you right away.';
+    }
+  </script>
+</Base>
