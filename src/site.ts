@@ -19,6 +19,6 @@ export const TONES: Record<string, [string, string]> = {
 // (progress saved in the visitor's browser only). Paste your Supabase
 // project URL and anon (public) key here to turn on accounts + emails.
 export const SUPABASE = {
-  url: '',
-  anonKey: '',
+  url: 'https://yygtzzcglfytukdrkcqp.supabase.co',
+  anonKey: 'sb_publishable_h0rqrVkiYv0kQUbxzCFX6w_ccmooUJz',
 };
