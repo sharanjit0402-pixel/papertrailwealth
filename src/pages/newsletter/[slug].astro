@@ -1,0 +1,60 @@
+---
+import Base from '../../layouts/Base.astro';
+import Signup from '../../components/newsletter/Signup.astro';
+import IssueCard from '../../components/newsletter/IssueCard.astro';
+import { getCollection, render } from 'astro:content';
+export async function getStaticPaths() {
+  const issues = await getCollection('newsletter');
+  return issues.map((issue) => ({ params: { slug: issue.id }, props: { issue } }));
+}
+const { issue } = Astro.props;
+const d = issue.data;
+const { Content } = await render(issue);
+const long = (x: Date) => x.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', timeZone: 'UTC' });
+const short = (x: Date) => x.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric', timeZone: 'UTC' });
+const prevFri = short(new Date(d.weekStart.getTime() - 3 * 86400000));
+const range = `${long(d.weekStart)} – ${long(d.weekEnd)}, ${d.weekEnd.getUTCFullYear()}`;
+const date = d.date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+const others = (await getCollection('newsletter')).filter((i) => i.id !== issue.id).sort((a, b) => b.data.issue - a.data.issue).slice(0, 3);
+const md = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+const schema = { '@context': 'https://schema.org', '@type': 'NewsArticle', headline: d.title, description: d.description, datePublished: d.date.toISOString(), author: { '@type': 'Person', name: 'Sharon' }, publisher: { '@type': 'Organization', name: 'The Paper Trail' } };
+---
+<Base title={`${d.title} | Weekly Investing Newsletter #${d.issue}`} description={d.description}>
+  <script type="application/ld+json" slot="head" set:html={JSON.stringify(schema)} />
+  <article class="article">
+    <div class="crumbs"><a href="/">Home</a> / <a href="/category/investing/">Investing</a> / <a href="/newsletter/">Weekly Newsletter</a></div>
+    <div class="nl-issue-tag">Weekly Investing Newsletter · Issue #{d.issue} · Week of {d.week}</div>
+    <h1>{d.title}</h1>
+    <div class="nl-range">📅 This issue covers: <strong>{range}</strong></div>
+    <div class="meta">By Sharon · Published {date}</div>
+
+    <div class="nl-score">
+      {d.scoreboard.map((s) => <div class="nl-score-item"><div class="nl-score-name">{s.name}</div><div class="nl-score-val">{s.value}</div><div class={`nl-score-chg ${s.up ? 'up' : 'dn'}`}>{s.change}</div></div>)}
+    </div>
+    <div class="nl-score-note">Weekly change: {prevFri} close → {short(d.weekEnd)} close</div>
+
+    <section class="nl-60">
+      <div class="nl-60-head">⏱ This week in 60 seconds</div>
+      <ul>{d.summary.map((s) => <li set:html={md(s)} />)}</ul>
+    </section>
+
+    <div class="prose"><Content /></div>
+    <Signup source={`issue-${d.issue}`} />
+  </article>
+  {others.length > 0 && <section class="container"><h2 class="section-title">Past issues</h2><div class="grid">{others.map((i) => <IssueCard issue={i} />)}</div></section>}
+</Base>
+<style>
+  .nl-issue-tag{display:inline-block;background:#E7F3EC;color:#1F7A4D;font-weight:800;font-size:13px;letter-spacing:1.5px;text-transform:uppercase;padding:8px 14px;border-radius:999px;margin-top:6px}
+  .nl-range{background:#FFF8E6;border:1px solid #F3E2B3;border-radius:12px;padding:12px 16px;font-size:17px;color:#1f2937;margin:14px 0 4px}
+  .nl-score{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:26px 0 6px}
+  .nl-score-item{background:#fff;border:1px solid #E5E7EB;border-radius:16px;padding:16px 16px 14px}
+  .nl-score-name{font-size:13px;font-weight:700;color:#6b7280;letter-spacing:.5px;text-transform:uppercase}
+  .nl-score-val{font-size:24px;font-weight:800;letter-spacing:-.6px;margin-top:4px;color:#14171A}
+  .nl-score-chg{font-size:16px;font-weight:800;margin-top:2px}
+  .nl-score-chg.dn{color:#C0392B}.nl-score-chg.up{color:#1F7A4D}
+  .nl-score-note{font-size:13px;color:#6b7280;margin-bottom:24px}
+  .nl-60{background:#F4F7F5;border:2px solid #1F7A4D;border-radius:20px;padding:22px 26px;margin:10px 0 30px}
+  .nl-60-head{font-weight:800;font-size:15px;letter-spacing:1.5px;text-transform:uppercase;color:#1F7A4D;margin-bottom:8px}
+  .nl-60 ul{margin:0;padding-left:20px}.nl-60 li{font-size:17px;line-height:1.55;margin:9px 0;color:#1f2937}
+  @media (max-width:640px){.nl-score{grid-template-columns:repeat(2,1fr)}.nl-score-val{font-size:20px}}
+</style>

@@ -1,0 +1,17 @@
+---
+import Base from '../../layouts/Base.astro';
+import IssueCard from '../../components/newsletter/IssueCard.astro';
+import Signup from '../../components/newsletter/Signup.astro';
+import { getCollection } from 'astro:content';
+const issues = (await getCollection('newsletter')).sort((a, b) => b.data.issue - a.data.issue);
+---
+<Base title="The Weekly Investing Newsletter" description="Every Saturday: everything that moved U.S. markets this week, from the Nasdaq and Dow to the Fed and Washington, explained in plain English.">
+  <section class="container">
+    <div class="crumbs" style="margin-top:28px"><a href="/">Home</a> / <a href="/category/investing/">Investing</a> / Newsletter</div>
+    <h1 class="section-title" style="font-size:46px;margin-bottom:8px">The Weekly Investing Newsletter</h1>
+    <p class="muted" style="font-size:19px;max-width:720px;line-height:1.55">Every Saturday morning: the Nasdaq, the Dow and the S&amp;P 500, the Fed, Washington, big company news and what's coming next week, all in one plain-English read.</p>
+    <div style="max-width:760px"><Signup variant="wide" source="newsletter-home" /></div>
+    <h2 class="section-title">All issues</h2>
+    <div class="grid">{issues.map((i) => <IssueCard issue={i} />)}</div>
+  </section>
+</Base>
