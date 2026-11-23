@@ -107,6 +107,10 @@ It takes less than a minute:
 - **Check your coverage:** use the FDIC's [Electronic Deposit Insurance Estimator (EDIE)](https://edie.fdic.gov/) to see exactly how much of your money is covered.
 - **For credit unions:** use the NCUA's [credit union locator](https://mapping.ncua.gov/).
 
+## Save this for later
+
+![FDIC insurance: $250,000 per person, per bank, per account type. A couple can be covered for $1.5 million.](/pins/fdic-1.png)
+
 ## The bottom line
 
 Your grandparents learned about bank safety the hard way, standing outside a locked bank in 1933. That's why so many families kept cash in a coffee can for decades.
