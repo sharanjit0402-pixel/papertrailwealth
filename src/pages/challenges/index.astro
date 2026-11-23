@@ -1,0 +1,71 @@
+---
+import Base from '../../layouts/Base.astro';
+import AuthBox from '../../components/challenges/AuthBox.astro';
+---
+<Base title="Free Money Challenges: Build a Savings Streak" description="You'll keep a Snapchat streak for 400 days. Why not your savings? Free savings challenges with a streak tracker: the 52-Week Challenge, a $1,000 emergency fund and the daily Savings Streak.">
+  <div class="ch-hero">
+    <div class="inner">
+      <span class="pill">Free money challenges · No credit card, no catch</span>
+      <h1>You'll keep a Snapchat streak for 400 days. <span>Why not your savings?</span></h1>
+      <p class="sub">Pick a challenge, tap each time you save, and watch your streak and your balance grow. Same streak. Better reward.</p>
+    </div>
+  </div>
+  <section class="container">
+    <div class="ch-grid">
+      <a class="ch-card" href="/challenges/savings-streak/">
+        <div class="em">🔥</div>
+        <h3>The Savings Streak</h3>
+        <p>Save any amount every day, even $1. Tap to log it and keep your streak alive. Miss a day and it starts over.</p>
+        <div class="goal">Goal: 7, 30, 100, 365 days</div>
+        <div class="prog" data-prog="savings-streak"></div>
+        <span class="btn btn-green">Start my streak 🔥</span>
+      </a>
+      <a class="ch-card" href="/challenges/emergency-fund/">
+        <div class="em">🛟</div>
+        <h3>The $1,000 Safety Net</h3>
+        <p>Build an emergency fund step by step: $1,000 first, then one month of bills, then three. For the car repair you didn't see coming.</p>
+        <div class="goal">Goal: $1,000 → 3 months of expenses</div>
+        <div class="prog" data-prog="emergency-fund"></div>
+        <span class="btn btn-green">Build my safety net</span>
+      </a>
+      <a class="ch-card" href="/challenges/52-week/">
+        <div class="em">📅</div>
+        <h3>The 52-Week Challenge</h3>
+        <p>Save $1 in week 1, $2 in week 2, all the way to $52. Tick off each week and watch the total climb.</p>
+        <div class="goal">Goal: $1,378 in a year</div>
+        <div class="prog" data-prog="52-week"></div>
+        <span class="btn btn-green">Start the 52 weeks</span>
+      </a>
+    </div>
+    <div style="max-width:980px;margin:0 auto;padding-bottom:80px">
+      <AuthBox />
+      <div class="prose" style="max-width:760px;margin-top:44px">
+        <h2>How it works</h2>
+        <ol>
+          <li><strong>Pick a challenge.</strong> Start small. The point is the habit, not the amount.</li>
+          <li><strong>Save, then tap.</strong> Move the money to your savings account, then log it here. Your streak and total update instantly.</li>
+          <li><strong>Don't break the chain.</strong> Add your email and we'll remind you before your streak runs out, and cheer you on at every milestone.</li>
+        </ol>
+        <p>We never ask for bank details. You only type the amounts you choose to log. Read our <a href="/privacy-policy/">privacy policy</a>.</p>
+        <p class="muted" style="font-size:15px">General education, not personal financial advice.</p>
+      </div>
+    </div>
+  </section>
+  <script>
+    import { ready, load, onUser, money, streakInfo, type ChallengeId } from '../../scripts/challenges-store';
+    async function render() {
+      for (const c of ['savings-streak', 'emergency-fund', '52-week'] as ChallengeId[]) {
+        const el = document.querySelector(`[data-prog="${c}"]`)!;
+        const s = await load(c);
+        if (!s.enrollment) { el.textContent = ''; continue; }
+        const total = s.logs.reduce((t, l) => t + (l.kind === 'withdraw' ? -l.amount : l.amount), 0);
+        if (c === 'savings-streak') el.textContent = `🔥 ${streakInfo(s.logs.map((l) => l.ref)).current}-day streak · ${money(total)} saved`;
+        else if (c === '52-week') el.textContent = `✓ ${s.logs.length} of 52 weeks · ${money(total)} saved`;
+        else el.textContent = `🛟 ${money(total)} saved so far`;
+        el.closest('.ch-card')!.querySelector('.btn')!.textContent = 'Continue →';
+      }
+    }
+    ready().then(render);
+    onUser(() => { ready().then(render); });
+  </script>
+</Base>

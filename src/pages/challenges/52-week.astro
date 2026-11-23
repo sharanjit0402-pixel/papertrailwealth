@@ -1,0 +1,80 @@
+---
+import Base from '../../layouts/Base.astro';
+import AuthBox from '../../components/challenges/AuthBox.astro';
+---
+<Base title="52-Week Money Challenge Tracker: Save $1,378" description="Free 52-week savings challenge tracker. Save $1 in week 1, up to $52 in week 52, and tick off each week to reach $1,378. Reverse mode included.">
+  <section class="ch-wrap">
+    <div class="crumbs muted" style="font-size:14px"><a href="/challenges/" style="color:var(--g);font-weight:600">Challenges</a> / 52-Week Challenge</div>
+    <h1>📅 The 52-Week Challenge</h1>
+    <p class="lead">Save $1 in week 1, $2 in week 2, all the way to $52 in week 52. That's <strong>$1,378</strong> by the end of the year. New to it? Read <a href="/blog/52-week-money-challenge/" style="color:var(--g);font-weight:600">how the 52-Week Challenge works</a>.</p>
+
+    <div class="box2" id="start">
+      <h3>Start the challenge</h3>
+      <label class="field">Which way?
+        <select id="mode"><option value="standard">Standard: $1 up to $52 (easy start)</option><option value="reverse">Reverse: $52 down to $1 (hard part first, great for December)</option></select>
+      </label>
+      <div class="actions"><button class="btn btn-green btn-big" id="go">Start my 52 weeks</button></div>
+    </div>
+
+    <div id="track" class="hidden">
+      <div class="stats">
+        <div class="stat hot"><small>Saved so far</small><b id="total">$0</b></div>
+        <div class="stat"><small>Weeks done</small><b id="done">0 / 52</b></div>
+        <div class="stat"><small>This week</small><b id="thisweek">Week 1</b></div>
+      </div>
+      <div class="box2">
+        <div style="display:flex;justify-content:space-between;font-weight:600"><span id="pct">0% of $1,378</span><span class="muted" id="left"></span></div>
+        <div class="pbar"><i id="bar" style="width:0%"></i></div>
+        <p class="muted" style="margin-top:16px;font-size:15px">Tap a week once you've moved that amount into savings. Tap again to undo. Missed one? Just catch up when you can.</p>
+        <div class="weeks" id="weeks"></div>
+      </div>
+      <p style="margin-top:18px;font-size:14px"><a href="#" id="reset" class="muted">Reset this challenge</a></p>
+    </div>
+
+    <AuthBox />
+    <p class="muted" style="font-size:14px;margin-top:24px">General education, not personal financial advice.</p>
+  </section>
+  <script>
+    import { ready, load, enroll, addLog, removeLog, resetChallenge, onUser, money } from '../../scripts/challenges-store';
+    const C = '52-week';
+    const $ = (id: string) => document.getElementById(id)!;
+    const GOAL = 1378;
+    let mode = 'standard';
+    const amt = (w: number) => (mode === 'reverse' ? 53 - w : w);
+    let toastT: any;
+    const toast = (t: string) => { const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2600); };
+
+    async function render() {
+      const s = await load(C);
+      $('start').classList.toggle('hidden', !!s.enrollment);
+      $('track').classList.toggle('hidden', !s.enrollment);
+      if (!s.enrollment) return;
+      mode = s.enrollment.settings.mode ?? 'standard';
+      const done = new Set(s.logs.map((l) => Number(l.ref.slice(1))));
+      const total = s.logs.reduce((t, l) => t + l.amount, 0);
+      const weekNow = Math.min(52, Math.floor((Date.now() - new Date(s.enrollment.started_at).getTime()) / (7 * 864e5)) + 1);
+      $('total').textContent = money(total);
+      $('done').textContent = `${done.size} / 52`;
+      $('thisweek').textContent = `Week ${weekNow} · ${money(amt(weekNow))}`;
+      $('pct').textContent = `${Math.round((total / GOAL) * 100)}% of $1,378`;
+      $('left').textContent = total >= GOAL ? '🎉 Challenge complete!' : `${money(GOAL - total)} to go`;
+      ($('bar') as HTMLElement).style.width = Math.min(100, (total / GOAL) * 100) + '%';
+      $('weeks').innerHTML = Array.from({ length: 52 }, (_, i) => i + 1).map((w) =>
+        `<button class="wk ${done.has(w) ? 'on' : ''} ${w === weekNow ? 'now' : ''}" data-w="${w}" aria-label="Week ${w}, $${amt(w)}">wk ${w}<b>$${amt(w)}</b></button>`).join('');
+    }
+    $('weeks').addEventListener('click', async (e) => {
+      const b = (e.target as HTMLElement).closest('.wk') as HTMLElement | null; if (!b) return;
+      const w = Number(b.dataset.w);
+      if (b.classList.contains('on')) { await removeLog(C, 'w' + w); }
+      else {
+        await addLog(C, { ref: 'w' + w, kind: 'week', amount: amt(w) });
+        const s = await load(C); const n = s.logs.length;
+        toast(n === 52 ? '🎉 All 52 weeks done. $1,378 saved!' : [4, 13, 26, 39].includes(n) ? `🏅 ${n} weeks done! Keep going.` : `✓ Week ${w} saved: $${amt(w)}`);
+      }
+      render();
+    });
+    $('go').addEventListener('click', async () => { await enroll(C, { mode: ($('mode') as HTMLSelectElement).value }); toast('Challenge started. Tick off week 1!'); render(); });
+    $('reset').addEventListener('click', async (e) => { e.preventDefault(); if (confirm('Reset your 52-Week Challenge? This deletes your ticked weeks.')) { await resetChallenge(C); render(); } });
+    ready().then(render); onUser(() => ready().then(render));
+  </script>
+</Base>

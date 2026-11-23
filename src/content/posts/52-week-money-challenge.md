@@ -12,6 +12,9 @@ What if you could save **$1,378** this year, starting with a single dollar?
 
 That's the 52-Week Money Challenge, one of the most popular saving challenges in America. It works because it starts so small that it feels almost silly, and by the time the amounts get bigger, saving has become a habit.
 
+
+> **Track it for free:** tick off each week and watch your total climb with our [52-Week Challenge tracker](/challenges/52-week/).
+
 ## How it works
 
 - **Week 1:** save $1

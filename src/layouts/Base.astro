@@ -41,6 +41,7 @@ const year = new Date().getFullYear();
     <a href="/" class="word">The Paper <span>Trail</span></a>
     <nav class="links">
       {CATEGORIES.map((c) => { const href = `/category/${slugify(c)}/`; return <a href={href} class={Astro.url.pathname === href ? 'on' : undefined}>{c === 'Money History' ? 'History' : c}</a>; })}
+      <a href="/challenges/" class={Astro.url.pathname.startsWith('/challenges/') ? 'on' : undefined}>🔥 Challenges</a>
     </nav>
     <a class="btn btn-dark navbtn" href="/tools/budget-calculator/"><span class="full">Budget </span>Calculator</a>
   </header>
@@ -57,7 +58,7 @@ const year = new Date().getFullYear();
       </div>
       <div>
         <h5>Site</h5>
-        <a href="/about/">About</a><a href="/contact/">Contact</a>
+        <a href="/challenges/">Money Challenges</a><a href="/about/">About</a><a href="/contact/">Contact</a>
         <a href="/privacy-policy/">Privacy Policy</a><a href="/disclaimer/">Disclaimer</a>
       </div>
     </div>

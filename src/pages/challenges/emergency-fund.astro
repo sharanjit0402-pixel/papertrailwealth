@@ -1,0 +1,122 @@
+---
+import Base from '../../layouts/Base.astro';
+import AuthBox from '../../components/challenges/AuthBox.astro';
+---
+<Base title="Emergency Fund Challenge: Build Your $1,000 Safety Net" description="A free emergency fund tracker. Start with a $1,000 safety net, then build to one and three months of expenses. Log deposits, see your finish date and keep your streak.">
+  <section class="ch-wrap">
+    <div class="crumbs muted" style="font-size:14px"><a href="/challenges/" style="color:var(--g);font-weight:600">Challenges</a> / Emergency Fund</div>
+    <h1>🛟 The $1,000 Safety Net</h1>
+    <p class="lead">An emergency fund turns a bad week into a bad day. Build it in stages: <strong>$1,000 first</strong>, then one month of bills, then three. Want the full plan? Read <a href="/blog/emergency-fund-from-zero/" style="color:var(--g);font-weight:600">how to build an emergency fund from $0</a>.</p>
+
+    <div class="box2" id="start">
+      <h3>Set your goal</h3>
+      <div class="row2">
+        <label class="field">Your must-pay costs each month
+          <input id="monthly" type="number" inputmode="decimal" placeholder="e.g. 2500" />
+          <span class="muted" style="font-weight:400;font-size:13px">Rent or mortgage, food, utilities, insurance, transport, minimum debt payments.</span>
+        </label>
+        <label class="field">How much can you save each week?
+          <input id="weekly" type="number" inputmode="decimal" placeholder="e.g. 40" />
+        </label>
+      </div>
+      <label class="field">Already have some saved? (optional)<input id="already" type="number" inputmode="decimal" placeholder="0" /></label>
+      <div class="actions"><button class="btn btn-green btn-big" id="go">Build my safety net</button></div>
+    </div>
+
+    <div id="track" class="hidden">
+      <div class="stats">
+        <div class="stat hot"><small>Emergency fund</small><b id="bal">$0</b></div>
+        <div class="stat"><small>Next goal</small><b id="next">$1,000</b></div>
+        <div class="stat"><small>On track to hit it</small><b id="eta" style="font-size:24px">—</b></div>
+      </div>
+      <div class="box2">
+        <div style="display:flex;justify-content:space-between;font-weight:600"><span id="stagelabel">Stage 1: Starter fund</span><span class="muted" id="left"></span></div>
+        <div class="pbar"><i id="bar" style="width:0%"></i></div>
+        <div class="stages" id="stages"></div>
+      </div>
+      <div class="box2">
+        <h3>Log money</h3>
+        <div class="row2" style="align-items:end">
+          <label class="field">Amount<input id="amt" type="number" inputmode="decimal" min="0.01" step="0.01" /></label>
+          <div class="actions" style="margin-top:0"><button class="btn btn-green btn-big" id="add" style="flex:1">+ Add money</button><button class="btn btn-ghost btn-big" id="use">I had to use it</button></div>
+        </div>
+        <p class="muted" style="font-size:14px;margin-top:10px">Used some for a real emergency? That's exactly what it's for. Log it and keep building.</p>
+        <h3 style="margin-top:24px">Recent activity</h3>
+        <div class="loglist" id="list"></div>
+      </div>
+      <p style="margin-top:18px;font-size:14px"><a href="#" id="edit" class="muted">Change my goal</a> · <a href="#" id="reset" class="muted">Reset this challenge</a></p>
+    </div>
+
+    <AuthBox />
+    <p class="muted" style="font-size:14px;margin-top:24px">Many experts suggest keeping 3 to 6 months of essential expenses in an easy-to-reach savings account. This is general education, not personal financial advice.</p>
+  </section>
+  <script>
+    import { ready, load, enroll, addLog, removeLog, resetChallenge, onUser, money, uid } from '../../scripts/challenges-store';
+    const C = 'emergency-fund';
+    const $ = (id: string) => document.getElementById(id)! as HTMLInputElement;
+    let toastT: any;
+    const toast = (t: string) => { const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2800); };
+    const stagesFor = (m: number) => [
+      { name: 'Starter fund', goal: 1000 },
+      { name: '1 month of bills', goal: Math.max(1000, m) },
+      { name: '3 months of bills', goal: Math.max(1000, m * 3) },
+      { name: '6 months (stretch)', goal: Math.max(1000, m * 6) },
+    ];
+    let lastBal = 0;
+
+    async function render() {
+      const s = await load(C);
+      $('start').classList.toggle('hidden', !!s.enrollment);
+      $('track').classList.toggle('hidden', !s.enrollment);
+      if (!s.enrollment) return;
+      const { monthly = 0, weekly = 0 } = s.enrollment.settings;
+      if (!$('amt').value && weekly) $('amt').value = String(weekly);
+      const bal = s.logs.reduce((t, l) => t + (l.kind === 'withdraw' ? -l.amount : l.amount), 0);
+      lastBal = bal;
+      const stages = stagesFor(Number(monthly));
+      const idx = stages.findIndex((st) => bal < st.goal);
+      const cur = idx === -1 ? stages.length - 1 : idx;
+      const prevGoal = cur === 0 ? 0 : stages[cur - 1].goal;
+      const goal = stages[cur].goal;
+      const pct = idx === -1 ? 100 : Math.max(0, Math.min(100, ((bal - prevGoal) / (goal - prevGoal)) * 100));
+      $('bal').textContent = money(Math.max(0, bal));
+      $('next').textContent = idx === -1 ? 'All done 🎉' : money(goal);
+      $('stagelabel').textContent = idx === -1 ? 'Every stage complete' : `Stage ${cur + 1}: ${stages[cur].name}`;
+      $('left').textContent = idx === -1 ? '🎉' : `${money(goal - bal)} to go`;
+      ($('bar') as HTMLElement).style.width = pct + '%';
+      if (idx !== -1 && weekly > 0) {
+        const weeks = Math.ceil((goal - bal) / weekly);
+        const d = new Date(); d.setDate(d.getDate() + weeks * 7);
+        $('eta').textContent = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      } else $('eta').textContent = idx === -1 ? 'Done' : '—';
+      $('stages').innerHTML = stages.map((st, i) => `<div class="stage ${bal >= st.goal ? 'done' : ''} ${i === cur && idx !== -1 ? 'cur' : ''}">${bal >= st.goal ? '✓ ' : ''}${st.name}<b>${money(st.goal)}</b></div>`).join('');
+      const recent = [...s.logs].reverse().slice(0, 8);
+      $('list').innerHTML = recent.length ? recent.map((l) => `<div><span>${l.kind === 'withdraw' ? '↘ Used' : '↗ Added'} <strong>${money(l.amount)}</strong> <span class="muted">· ${new Date(l.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span></span><button data-ref="${l.ref}">Remove</button></div>`).join('') : '<p class="muted" style="font-size:15px">Nothing logged yet. Every dollar counts.</p>';
+    }
+
+    $('go').addEventListener('click', async () => {
+      const monthly = parseFloat($('monthly').value), weekly = parseFloat($('weekly').value), already = parseFloat($('already').value);
+      if (!(monthly > 0) || !(weekly > 0)) { toast('Enter your monthly costs and weekly savings.'); return; }
+      const s = await load(C);
+      await enroll(C, { monthly, weekly });
+      if (!s.enrollment && already > 0) await addLog(C, { ref: 'start', kind: 'save', amount: already });
+      toast('Your safety net plan is ready.'); render();
+    });
+    const log = async (kind: 'save' | 'withdraw') => {
+      const amount = parseFloat($('amt').value);
+      if (!(amount > 0)) { toast('Enter an amount first.'); return; }
+      const before = lastBal;
+      await addLog(C, { ref: uid(), kind, amount });
+      const after = before + (kind === 'save' ? amount : -amount);
+      const hit = [100, 500, 1000].find((m) => before < m && after >= m);
+      toast(kind === 'withdraw' ? 'Logged. Your fund did its job. Keep building.' : hit ? `🏅 You hit ${money(hit)}!` : `+${money(amount)} added. Nice.`);
+      render();
+    };
+    $('add').addEventListener('click', () => log('save'));
+    $('use').addEventListener('click', () => log('withdraw'));
+    $('list').addEventListener('click', async (e) => { const b = (e.target as HTMLElement).closest('button'); if (b) { await removeLog(C, b.dataset.ref!); render(); } });
+    $('edit').addEventListener('click', async (e) => { e.preventDefault(); const s = await load(C); $('monthly').value = s.enrollment?.settings.monthly ?? ''; $('weekly').value = s.enrollment?.settings.weekly ?? ''; ($('already').closest('label') as HTMLElement).classList.add('hidden'); $('start').classList.remove('hidden'); $('go').textContent = 'Save my new goal'; });
+    $('reset').addEventListener('click', async (e) => { e.preventDefault(); if (confirm('Reset your emergency fund challenge? This deletes your logged deposits.')) { await resetChallenge(C); render(); } });
+    ready().then(render); onUser(() => ready().then(render));
+  </script>
+</Base>

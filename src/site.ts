@@ -14,3 +14,11 @@ export const TONES: Record<string, [string, string]> = {
   'Retirement': ['#E7F3EC', '#1F7A4D'],
   'Money History': ['#F3EEE4', '#6B4F2A'],
 };
+
+// Challenges backend. Leave blank to run the challenges in on-device mode
+// (progress saved in the visitor's browser only). Paste your Supabase
+// project URL and anon (public) key here to turn on accounts + emails.
+export const SUPABASE = {
+  url: '',
+  anonKey: '',
+};

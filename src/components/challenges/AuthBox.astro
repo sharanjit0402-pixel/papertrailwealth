@@ -1,0 +1,47 @@
+---
+// Sign-in / account panel shown on every challenge page.
+---
+<div class="auth" id="authbox">
+  <div id="auth-out">
+    <h3>Save your progress &amp; get reminders</h3>
+    <p id="auth-mode-note">Your progress is saved on this device. Add your email to keep it safe on every device and get streak reminders. No password: we email you a one-tap login link.</p>
+    <form id="auth-form">
+      <input type="text" id="auth-name" placeholder="First name" autocomplete="given-name" required />
+      <input type="email" id="auth-email" placeholder="you@email.com" autocomplete="email" required />
+      <button class="btn btn-green" type="submit">Email me a link</button>
+    </form>
+    <label class="chk"><input type="checkbox" id="auth-optin" checked /> Send me reminders and progress emails from The Paper Trail. Unsubscribe anytime.</label>
+    <p id="auth-msg" style="margin-top:10px;font-weight:600"></p>
+  </div>
+  <div id="auth-in" class="hidden">
+    <h3>✓ Signed in as <span id="auth-who"></span></h3>
+    <p>Your progress is saved to your account. <a href="#" id="auth-signout" style="color:var(--g);font-weight:600">Sign out</a></p>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+  import { backendReady, ready, onUser, signIn, signOut } from '../../scripts/challenges-store';
+  const $ = (id: string) => document.getElementById(id)!;
+  if (!backendReady) {
+    $('auth-form').classList.add('hidden');
+    document.querySelector('#authbox .chk')!.classList.add('hidden');
+    $('auth-mode-note').textContent = 'Your progress is saved on this device. Accounts with email reminders are coming very soon.';
+  } else {
+    onUser((u) => {
+      $('auth-out').classList.toggle('hidden', !!u);
+      $('auth-in').classList.toggle('hidden', !u);
+      if (u) $('auth-who').textContent = (u.user_metadata?.name ? u.user_metadata.name + ' · ' : '') + (u.email ?? '');
+    });
+    $('auth-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const msg = $('auth-msg');
+      msg.textContent = 'Sending…';
+      try {
+        await signIn(($('auth-email') as HTMLInputElement).value.trim(), ($('auth-name') as HTMLInputElement).value.trim(), ($('auth-optin') as HTMLInputElement).checked);
+        msg.innerHTML = '📬 Check your inbox for a login link from hello@papertrailwealth.com.';
+      } catch (err: any) { msg.textContent = 'Something went wrong: ' + (err?.message ?? 'please try again.'); }
+    });
+    $('auth-signout').addEventListener('click', async (e) => { e.preventDefault(); await signOut(); location.reload(); });
+  }
+  ready();
+</script>

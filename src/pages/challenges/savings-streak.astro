@@ -1,0 +1,100 @@
+---
+import Base from '../../layouts/Base.astro';
+import AuthBox from '../../components/challenges/AuthBox.astro';
+---
+<Base title="The Savings Streak: A Daily Savings Challenge Tracker" description="Save any amount every day, tap to log it, and keep your streak alive. A free daily savings streak tracker with milestones at 7, 30, 100 and 365 days.">
+  <section class="ch-wrap">
+    <div class="crumbs muted" style="font-size:14px"><a href="/challenges/" style="color:var(--g);font-weight:600">Challenges</a> / Savings Streak</div>
+    <h1>🔥 The Savings Streak</h1>
+    <p class="lead">Your Snapchat streak won't pay your rent. This one will. Save something every day, even $1, and tap to log it before midnight.</p>
+
+    <div class="box2" id="start">
+      <h3>Start your streak</h3>
+      <p class="muted" style="margin-top:4px">Pick a daily amount you can actually keep up. Small and steady beats big and broken.</p>
+      <label class="field">My daily amount
+        <select id="daily"><option value="1">$1 a day ($365 a year)</option><option value="2">$2 a day ($730 a year)</option><option value="5" selected>$5 a day ($1,825 a year)</option><option value="10">$10 a day ($3,650 a year)</option></select>
+      </label>
+      <div class="actions"><button class="btn btn-green btn-big" id="go">Start my streak 🔥</button></div>
+    </div>
+
+    <div id="track" class="hidden">
+      <div class="box2">
+        <div class="streak-hero">
+          <div class="flame" id="flame">🔥</div>
+          <div><b class="n" id="cur">0</b><div class="muted" style="font-weight:600">day streak</div></div>
+        </div>
+        <p id="status" style="margin-top:14px;font-weight:600"></p>
+        <div class="row2" style="align-items:end">
+          <label class="field">Amount saved today<input id="amt" type="number" inputmode="decimal" min="0.01" step="0.01" /></label>
+          <div class="actions" style="margin-top:0"><button class="btn btn-green btn-big" id="log" style="width:100%">I saved today 🔥</button></div>
+        </div>
+        <div class="actions"><button class="btn btn-ghost hidden" id="undo">Undo today</button></div>
+      </div>
+      <div class="stats">
+        <div class="stat hot"><small>Total saved</small><b id="total">$0</b></div>
+        <div class="stat"><small>Longest streak</small><b id="longest">0</b></div>
+        <div class="stat"><small>Days logged</small><b id="days">0</b></div>
+      </div>
+      <div class="box2">
+        <h3>Milestones</h3>
+        <div class="badges" id="badges"></div>
+        <h3 style="margin-top:24px">Last 5 weeks</h3>
+        <div class="cal" id="cal"></div>
+      </div>
+      <p style="margin-top:18px;font-size:14px"><a href="#" id="reset" class="muted">Reset this challenge</a> · <a href="#" id="edit" class="muted">Change daily amount</a></p>
+    </div>
+
+    <AuthBox />
+    <p class="muted" style="font-size:14px;margin-top:24px">Tip: set up a free automatic daily or weekly transfer to a separate savings account so you never forget. General education, not personal financial advice.</p>
+  </section>
+  <script>
+    import { ready, load, enroll, addLog, removeLog, resetChallenge, onUser, money, todayKey, streakInfo } from '../../scripts/challenges-store';
+    const C = 'savings-streak';
+    const $ = (id: string) => document.getElementById(id)! as HTMLInputElement;
+    const MILES = [3, 7, 14, 30, 60, 100, 200, 365];
+    let toastT: any;
+    const toast = (t: string) => { const el = $('toast'); el.textContent = t; el.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2600); };
+
+    async function render() {
+      const s = await load(C);
+      $('start').classList.toggle('hidden', !!s.enrollment);
+      $('track').classList.toggle('hidden', !s.enrollment);
+      if (!s.enrollment) return;
+      const daily = Number(s.enrollment.settings.daily ?? 5);
+      if (!$('amt').value) $('amt').value = String(daily);
+      const days = s.logs.map((l) => l.ref);
+      const { current, longest, doneToday } = streakInfo(days);
+      const total = s.logs.reduce((t, l) => t + l.amount, 0);
+      $('cur').textContent = String(current);
+      $('flame').style.filter = current ? 'none' : 'grayscale(1)';
+      $('total').textContent = money(total);
+      $('longest').textContent = longest + (longest === 1 ? ' day' : ' days');
+      $('days').textContent = String(days.length);
+      $('log').textContent = doneToday ? '✓ Saved today' : 'I saved today 🔥';
+      ($('log') as any).disabled = doneToday;
+      $('undo').classList.toggle('hidden', !doneToday);
+      const next = MILES.find((m) => m > current) ?? 365;
+      $('status').textContent = doneToday
+        ? `Nice. Today is locked in. ${next - current} more ${next - current === 1 ? 'day' : 'days'} to your ${next}-day badge.`
+        : current ? `Log today before midnight to keep your ${current}-day streak alive.` : 'Save something today to light your first flame.';
+      $('badges').innerHTML = MILES.map((m) => `<span class="badge ${longest >= m ? 'got' : ''}">${longest >= m ? '🏅' : '🔒'} ${m} days</span>`).join('');
+      const set = new Set(days); const cells: string[] = []; const d = new Date(); d.setDate(d.getDate() - 34);
+      for (let i = 0; i < 35; i++) { const k = todayKey(d); cells.push(`<span class="${set.has(k) ? 'on' : ''} ${k === todayKey() ? 'today' : ''}" title="${k}">${d.getDate()}</span>`); d.setDate(d.getDate() + 1); }
+      $('cal').innerHTML = cells.join('');
+    }
+
+    $('go').addEventListener('click', async () => { await enroll(C, { daily: Number(($('daily') as any).value) }); toast('Streak started. Log your first day!'); render(); });
+    $('log').addEventListener('click', async () => {
+      const amount = parseFloat($('amt').value);
+      if (!(amount > 0)) { toast('Enter how much you saved today.'); return; }
+      await addLog(C, { ref: todayKey(), kind: 'day', amount });
+      const s = await load(C); const { current } = streakInfo(s.logs.map((l) => l.ref));
+      toast(MILES.includes(current) ? `🏅 ${current}-day streak! You're on fire.` : `🔥 ${current}-day streak. See you tomorrow!`);
+      render();
+    });
+    $('undo').addEventListener('click', async () => { await removeLog(C, todayKey()); render(); });
+    $('edit').addEventListener('click', (e) => { e.preventDefault(); $('start').classList.remove('hidden'); $('go').textContent = 'Save new amount'; });
+    $('reset').addEventListener('click', async (e) => { e.preventDefault(); if (confirm('Reset your Savings Streak? This deletes your logged days.')) { await resetChallenge(C); render(); } });
+    ready().then(render); onUser(() => ready().then(render));
+  </script>
+</Base>

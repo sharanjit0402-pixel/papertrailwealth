@@ -12,6 +12,9 @@ Federal Reserve surveys have found that roughly **1 in 3 American adults couldn'
 
 An emergency fund is the fix. It's simply money set aside for the unexpected, so a bad week doesn't turn into months of debt. Here's how to build one, even if you're starting at zero.
 
+
+> **Build yours with us:** set your goal, log every deposit and see your finish date with the free [$1,000 Safety Net challenge](/challenges/emergency-fund/).
+
 ## Step 1: Set a starter goal of $500 to $1,000
 
 Forget "six months of expenses" for now. That number is so big it stops most people before they start.

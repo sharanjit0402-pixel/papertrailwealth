@@ -14,17 +14,17 @@ const posts = (await getCollection('posts')).sort((a, b) => b.data.date.valueOf(
         <p class="sub">Budgeting, saving and bill-cutting guides for real families, written in plain English. No jargon. No sales pitch.</p>
         <div class="cta">
           <a class="btn btn-green" href="/tools/budget-calculator/">Try the free budget calculator</a>
-          <a class="btn btn-ghost" href="#guides">Read the guides</a>
+          <a class="btn btn-ghost" href="/challenges/">🔥 Start a savings streak</a>
         </div>
       </div>
-      <div class="panel" aria-hidden="true">
+      <a class="panel" href="/challenges/52-week/" aria-label="Start the 52-week savings challenge">
         <div class="big">
           <small>52-week savings challenge</small>
           <b class="num">$1,378</b>
           <div class="bars"><i style="height:20%"></i><i style="height:32%"></i><i style="height:45%"></i><i style="height:58%"></i><i style="height:72%"></i><i class="on" style="height:100%"></i></div>
         </div>
         <div class="float"><small>Saved by week 52</small><b>Starting at $1</b><em>↑ one dollar more each week</em></div>
-      </div>
+      </a>
     </section>
   </div>
   <section class="container" id="guides">
