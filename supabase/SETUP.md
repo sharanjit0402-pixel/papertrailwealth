@@ -23,23 +23,27 @@ body: "Tap to open your money challenges: {{ .ConfirmationURL }}"
 ## 3. Email functions
 **Edge Functions** → create `welcome`, `notify`, `unsubscribe` from the files in
 `supabase/functions/` (each one needs `_shared/email.ts` alongside it).
-- `notify` and `unsubscribe`: turn **off** "Verify JWT".
-- **Edge Functions → Secrets**: `RESEND_API_KEY`, `UNSUB_SECRET` (any long random
-  string), `CRON_SECRET` (another long random string), `SITE_URL=https://papertrailwealth.com`.
+- Turn **off** "Verify JWT with legacy secret" on all three (the functions check
+  the user themselves; `notify` only sends between 6 and 7 PM US Eastern).
+- **Edge Functions → Secrets**: add `RESEND_API_KEY` (a Resend sending key).
 
-## 4. Run `notify` every evening (6 PM US Eastern)
-**Database → Extensions**: enable `pg_cron` and `pg_net`. Then in SQL Editor
-(replace PROJECT_REF and CRON_SECRET):
+## 4. Call `notify` every hour
+In SQL Editor (replace PROJECT_REF):
 
 ```sql
-select cron.schedule('challenge-emails', '0 23 * * *', $$
+create extension if not exists pg_cron;
+create extension if not exists pg_net;
+select cron.schedule('challenge-emails', '0 * * * *', $$
   select net.http_post(
     url := 'https://PROJECT_REF.supabase.co/functions/v1/notify',
-    headers := '{"x-cron-secret":"CRON_SECRET","Content-Type":"application/json"}'::jsonb,
+    headers := '{"Content-Type":"application/json"}'::jsonb,
     body := '{}'::jsonb
   );
 $$);
 ```
+
+**Live setup (Nov 2026):** project `trail` (yygtzzcglfytukdrkcqp, West US). Steps 1–5 are
+done; the only manual item is the `RESEND_API_KEY` secret.
 
 ## 5. Connect the website
 In `src/site.ts`, paste the **Project URL** and **anon public key**
