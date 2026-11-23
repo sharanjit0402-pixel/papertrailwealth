@@ -3,10 +3,13 @@ import Base from '../../layouts/Base.astro';
 import PostCard from '../../components/PostCard.astro';
 import { getCollection } from 'astro:content';
 import { CATEGORIES, slugify } from '../../site';
+import IssueCard from '../../components/newsletter/IssueCard.astro';
+import Signup from '../../components/newsletter/Signup.astro';
 export function getStaticPaths() {
   return CATEGORIES.map((c) => ({ params: { cat: slugify(c) }, props: { name: c } }));
 }
 const { name } = Astro.props;
+const issues = name === 'Investing' ? (await getCollection('newsletter')).sort((a, b) => b.data.issue - a.data.issue) : [];
 const posts = (await getCollection('posts')).filter((p) => p.data.category === name).sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 ---
 <Base title={`${name} Guides`} description={`Plain-English ${name.toLowerCase()} guides from The Paper Trail.`}>
@@ -16,6 +19,31 @@ const posts = (await getCollection('posts')).filter((p) => p.data.category === n
       <a class="chip" href="/">All</a>
       {CATEGORIES.map((c) => <a class={`chip ${c === name ? 'on' : ''}`} href={`/category/${slugify(c)}/`}>{c}</a>)}
     </div>
+    {name === 'Investing' && (
+      <div class="inv-tabs"><a href="#newsletter">📰 Weekly Investing Newsletter</a><a href="#tips">💡 Investing Tips</a></div>
+    )}
+    {name === 'Investing' && (
+      <section id="newsletter" class="inv-sec">
+        <div class="inv-head"><h2 class="section-title" style="margin:0">Weekly Investing Newsletter</h2><a href="/newsletter/" class="inv-all">All issues →</a></div>
+        <p class="muted inv-sub">Every Saturday: everything that moved U.S. markets this week, explained in plain English.</p>
+        <div class="inv-nl">
+          <div class="grid inv-grid">{issues.slice(0, 2).map((i) => <IssueCard issue={i} />)}</div>
+          <Signup source="investing-page" />
+        </div>
+      </section>
+    )}
+    {name === 'Investing' && <div id="tips" class="inv-head" style="margin-top:20px"><h2 class="section-title" style="margin:0">Investing Tips</h2></div>}
     {posts.length ? <div class="grid">{posts.map((p) => <PostCard post={p} />)}</div> : <p class="muted" style="padding:40px 0 120px;font-size:18px">New {name.toLowerCase()} guides are on the way. <a href="/" style="color:#1F7A4D;font-weight:600">Browse all guides →</a></p>}
   </section>
 </Base>
+<style>
+  .inv-tabs{display:flex;gap:12px;flex-wrap:wrap;margin:6px 0 26px}
+  .inv-tabs a{background:#fff;border:2px solid #1F7A4D;color:#1F7A4D;font-weight:800;padding:12px 18px;border-radius:14px;text-decoration:none}
+  .inv-tabs a:first-child{background:#1F7A4D;color:#fff}
+  .inv-head{display:flex;justify-content:space-between;align-items:baseline;gap:16px;flex-wrap:wrap}
+  .inv-all{color:#1F7A4D;font-weight:700;text-decoration:none}
+  .inv-sub{font-size:17px;margin:6px 0 4px}
+  .inv-nl{display:grid;grid-template-columns:1fr 1fr;gap:26px;align-items:start;margin-bottom:30px}
+  .inv-grid{grid-template-columns:1fr!important;padding:30px 0 0!important}.inv-nl .nl-box{margin-top:30px}
+  @media (max-width:900px){.inv-nl{grid-template-columns:1fr}.inv-grid{grid-template-columns:1fr!important}}
+</style>
