@@ -15,4 +15,19 @@ const posts = defineCollection({
     challenge: z.enum(['52-week', 'emergency-fund', 'savings-streak']).optional(),
   }),
 });
-export const collections = { posts };
+const newsletter = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/newsletter' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    issue: z.number(),
+    week: z.string(),
+    weekStart: z.coerce.date(),
+    weekEnd: z.coerce.date(),
+    date: z.coerce.date(),
+    summary: z.array(z.string()),
+    teaser: z.array(z.string()),
+    scoreboard: z.array(z.object({ name: z.string(), value: z.string(), change: z.string(), up: z.boolean().default(false) })),
+  }),
+});
+export const collections = { posts, newsletter };
