@@ -11,6 +11,8 @@ const posts = defineCollection({
     featured: z.boolean().default(false),
     image: z.string().optional(),
     imageAlt: z.string().optional(),
+    // Which money challenge to promote at the end of this article (optional)
+    challenge: z.enum(['52-week', 'emergency-fund', 'savings-streak']).optional(),
   }),
 });
 export const collections = { posts };

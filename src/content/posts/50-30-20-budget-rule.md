@@ -7,6 +7,7 @@ image: "/images/50-30-20-budget-rule.svg"
 imageAlt: "A $4,000 paycheck split into needs $2,000, wants $1,200 and savings $800"
 icon: "50/30/20"
 featured: true
+challenge: savings-streak
 ---
 
 Most budgets fail for one reason: they're too complicated. Twenty categories, color-coded spreadsheets, receipts in a shoebox. Two weeks later, the whole thing is abandoned.

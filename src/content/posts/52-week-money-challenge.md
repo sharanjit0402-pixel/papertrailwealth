@@ -6,6 +6,7 @@ date: 2026-11-19
 image: "/images/52-week-money-challenge.svg"
 imageAlt: "52 bars growing from $1 in week 1 to $52 in week 52, filling a jar to $1,378"
 icon: "$1,378"
+challenge: 52-week
 ---
 
 What if you could save **$1,378** this year, starting with a single dollar?

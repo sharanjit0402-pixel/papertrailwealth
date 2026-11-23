@@ -6,6 +6,7 @@ date: 2026-11-18
 image: "/images/emergency-fund-from-zero.svg"
 imageAlt: "A $400 car repair bill next to an emergency fund progress bar from $0 to $1,000"
 icon: "$0 → $1K"
+challenge: emergency-fund
 ---
 
 Federal Reserve surveys have found that roughly **1 in 3 American adults couldn't cover a surprise $400 expense with cash**. A car repair, a vet bill or a broken phone, and suddenly it goes on a credit card that charges 20% interest or more.

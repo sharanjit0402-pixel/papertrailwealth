@@ -1,0 +1,17 @@
+---
+// Sign-up box promoting the money challenge that matches an article.
+interface Props { challenge: '52-week' | 'emergency-fund' | 'savings-streak'; }
+const C = {
+  'savings-streak': { emoji: '🔥', name: 'The Savings Streak', pitch: "You'll keep a Snapchat streak for 400 days. Why not your savings? Save any amount every day, even $1, and tap to keep your streak alive.", goal: 'Milestones at 7, 30, 100 and 365 days', btn: 'Start my savings streak' },
+  'emergency-fund': { emoji: '🛟', name: 'The $1,000 Safety Net', pitch: 'Build your emergency fund step by step: $1,000 first, then one month of bills, then three. Log every deposit and see the exact date you’ll hit your goal.', goal: 'Goal: $1,000 → 3 months of expenses', btn: 'Build my safety net' },
+  '52-week': { emoji: '📅', name: 'The 52-Week Challenge', pitch: 'Save $1 in week one and add a dollar every week. Tick off each week, watch your total climb and get a reminder every Sunday.', goal: 'Goal: $1,378 in a year', btn: 'Start the 52 weeks' },
+}[Astro.props.challenge];
+---
+<aside class="cta-box">
+  <div class="cta-tag">Free money challenge</div>
+  <div class="cta-head"><span class="cta-emoji">{C.emoji}</span><h3>{C.name}</h3></div>
+  <p>{C.pitch}</p>
+  <div class="cta-goal">{C.goal}</div>
+  <a class="btn cta-btn" href={`/challenges/${Astro.props.challenge}/`}>{C.btn} →</a>
+  <div class="cta-small">Free · No bank details needed · Takes seconds a day</div>
+</aside>

@@ -7,6 +7,7 @@ icon: "$250K"
 featured: false
 image: "/images/fdic-250k-insured.svg"
 imageAlt: "FDIC insurance covers $250,000 per person, per bank, per account type"
+challenge: emergency-fund
 ---
 
 In March 1933, almost every bank in America was locked. Millions of families had no idea if their life savings still existed. More than 9,000 banks had failed in just four years, and people who were last in line at the bank often got nothing at all.

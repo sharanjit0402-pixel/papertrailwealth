@@ -7,6 +7,7 @@ image: "/images/stock-market-correction.svg"
 imageAlt: "S&P 500 chart falling from its record high through the 10% correction line: down $6 trillion in 45 days"
 icon: "-10%"
 featured: false
+challenge: emergency-fund
 ---
 
 If you opened your 401(k) this week and felt your stomach drop, you're not alone. U.S. stocks have lost about **$6 trillion in 45 days**, according to The Kobeissi Letter. That works out to roughly $225 billion a day, for 31 trading days in a row.
